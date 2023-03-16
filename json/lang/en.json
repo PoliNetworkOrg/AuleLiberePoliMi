@@ -6,7 +6,7 @@
         "day" : "Choose a day",
         "starting_time" : "Choose the starting time",
         "ending_time" : "Choose the ending time",
-        "error": "Use the buttons you fucking donkey!",
+        "error": "Use the buttons you donkey!",
         "ops" : "In this time slot PoliMi is closed!\nI will give you instead the free classrooms of tomorrow morning from 8 a.m. to 10 a.m.",
         "terminate": "Conversation terminated!\nPress /start to start again the conversation!",
         "cancel" : "Going back⬅",
