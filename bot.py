@@ -17,7 +17,7 @@ from telegram import ParseMode
 from functions import errorhandler , string_builder , input_check , keyboard_builder , user_data_handler ,regex_builder
 
 
-LOGPATH = "./log/"
+LOGPATH = "App/log/"
 DIRPATH = dirname(__file__)
 
 
