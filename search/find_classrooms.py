@@ -1,4 +1,5 @@
 from logging import root
+import logging
 import requests
 from bs4 import BeautifulSoup
 import json
@@ -42,6 +43,7 @@ def find_classrooms(location , day , month , year):
     r = requests.get(URL , params= params)
     
     soup = BeautifulSoup(r.text, 'html.parser')
+    
     tableContainer = soup.find("div", {"id": "tableContainer"})
     tableRows = tableContainer.find_all('tr')[3:] #remove first three headers
 
@@ -88,7 +90,21 @@ def find_classrooms(location , day , month , year):
                     time += TIME_SHIFT
     return clean_data(info)
 
+"""
+Return HTML file containing all occupancies in a campus for a given day
+"""
+def get_occupancy_of_the_day(location, day, month, year):
+    info = {} 
+    buildingName = '-' #defaul value for building
+    info[buildingName] = {} #first initialization due to table format
 
+    params = {'csic': location , 'categoria' : 'tutte', 'tipologia' : 'tutte', 'giorno_day' : day , 'giorno_month' : month, 'giorno_year' : year , 'jaf_giorno_date_format' : 'dd%2FMM%2Fyyyy'  , 'evn_visualizza' : ''}
+    r = requests.get(URL , params= params)
+    
+    soup = BeautifulSoup(r.text, 'html.parser')
+    
+    return soup
+    
 
 
 if __name__ == "__main__":

@@ -8,7 +8,7 @@ from os.path import join , dirname
 from dotenv import load_dotenv
 import telegram
 from telegram.message import Message
-from search.free_classroom import find_free_room
+from search.free_classroom import *
 from search.find_classrooms import TIME_SHIFT , MAX_TIME , MIN_TIME
 from telegram import  Update , ReplyKeyboardMarkup ,ReplyKeyboardRemove  
 from telegram.ext import (PicklePersistence,Updater,CommandHandler,ConversationHandler,CallbackContext,MessageHandler , Filters , CallbackQueryHandler)
@@ -178,7 +178,6 @@ def start(update: Update , context: CallbackContext) ->int:
     lang = user_data_handler.initialize_user_data(context)     
     user = update.message.from_user
     initial_keyboard = KEYBOARDS.initial_keyboard(lang)
-    logging.info("%s started conversation" , user.username)
 
     update.message.reply_text(texts[lang]["texts"]['welcome'].format(user.username),disable_web_page_preview=True , parse_mode=ParseMode.HTML , reply_markup=ReplyKeyboardMarkup(initial_keyboard))
 
@@ -432,7 +431,7 @@ def main():
     dispatcher = updater.dispatcher
 
     conv_handler = ConversationHandler(
-        entry_points=[CommandHandler('start',start)],
+        entry_points=[CommandHandler("start",start), MessageHandler(Filters.all, start)],
         states={
             INITIAL_STATE : [MessageHandler(Filters.regex(regex.initial_state()),initial_state)],
             SET_LOCATION : [MessageHandler(Filters.text & ~Filters.command,set_location_state)],
@@ -442,9 +441,9 @@ def main():
             SETTINGS : [MessageHandler(Filters.regex(regex.settings_regex()) , settings)],
             SET_LANG : [MessageHandler(Filters.text & ~Filters.command , set_language)],
             SET_CAMPUS: [MessageHandler(Filters.text & ~Filters.command , set_campus)],
-            SET_TIME: [MessageHandler(Filters.text & ~Filters.command , set_time)]
+            SET_TIME: [MessageHandler(Filters.text & ~Filters.command , set_time)],
             },
-        fallbacks=[CommandHandler('terminate' , terminate)  , MessageHandler(Filters.regex(regex.info_regex()) , info), MessageHandler(Filters.regex(regex.cancel_command()), cancel)],
+        fallbacks=[CommandHandler('terminate' , terminate)  , MessageHandler(Filters.regex(regex.info_regex()) , info), MessageHandler(Filters.regex(regex.cancel_command()), cancel), MessageHandler(Filters.all, start)],
     
     persistent=True,name='search_room_c_handler',allow_reentry=True)
 
